@@ -60,7 +60,7 @@ Let’s consider the following network topology as an example. In this
 scenario router S programs its Switching Entity to forward traffic
 destined for node D.
 
-![](figures/sai_example.png)
+![](figures/sai_frr_example.png)
 
 As the first step the Control Plane stack on S calculates shortest path
 to D, which in this example is via node C. This is programmed to the
