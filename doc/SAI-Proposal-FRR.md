@@ -60,8 +60,7 @@ Let’s consider the following network topology as an example. In this
 scenario router S programs its Switching Entity to forward traffic
 destined for node D.
 
-![](media/image2.png){width="2.8870964566929134in"
-height="2.486111111111111in"}
+![](figures/sai_example.png)
 
 As the first step the Control Plane stack on S calculates shortest path
 to D, which in this example is via node C. This is programmed to the
@@ -120,8 +119,7 @@ hardware vendors after we presented the first draft of this proposal
 # Proposal
 ## Current SAI object model
 
-![](media/image3.JPG){width="6.846666666666667in"
-height="1.6458333333333333in"}
+![](figures/sai_frr_current_model.png)
 
 Current model allows programming multiple next hops for a given
 destination. This is achieved by using a Next Hop Group object instead
@@ -176,48 +174,23 @@ indicate what is the configured and actual role of the referred next hop
 in a protection group. The attributes are:
 
 -   SAI\_NEXT\_HOP\_GROUP\_MEMBER\_ATTR\_PREFERRED\_ROLE
-
     -   This attribute is configurable and has to be specified when the
         next hop group member is created.
-
     -   It can take one of the following values:
-
-  SAI\_NEXT\_HOP\_GROUP\_MEMBER\_FORWARDING   The next hop group member is configured as primary and will forward traffic if there is no failure.
-  ------------------------------------------- ------------------------------------------------------------------------------------------------------------
-  SAI\_NEXT\_HOP\_GROUP\_MEMBER\_STANDBY      The next hop group member is configured as a backup and will not forward traffic unless the primary fails.
-
+        - SAI\_NEXT\_HOP\_GROUP\_MEMBER\_FORWARDING - The next hop group member is configured as primary and will forward traffic if there is no failure.
+        - SAI\_NEXT\_HOP\_GROUP\_MEMBER\_STANDBY - The next hop group member is configured as a backup and will not forward traffic unless the primary fails.
 -   SAI\_NEXT\_HOP\_GROUP\_MEMBER\_ATTR\_OBSERVED\_ROLE
-
     -   This is a read-only attribute which represents the actual role
         of the referred next hop.
-
     -   It can take one of the following values:
-
-  SAI\_NEXT\_HOP\_GROUP\_MEMBER\_FORWARDING   This next hop group member is currently forwarding traffic. Valid for both primary and backup.
-  ------------------------------------------- ------------------------------------------------------------------------------------------------
-  SAI\_NEXT\_HOP\_GROUP\_MEMBER\_STANDBY      This next hop is backup and is currently not forwarding any traffic.
-  SAI\_NEXT\_HOP\_GROUP\_MEMBER\_FAILED       This next hop is primary but is currently in failed state and is not forwarding any traffic.
+        - SAI\_NEXT\_HOP\_GROUP\_MEMBER\_FORWARDING - This next hop group member is currently forwarding traffic. Valid for both primary and backup.
+        - SAI\_NEXT\_HOP\_GROUP\_MEMBER\_STANDBY - This next hop is backup and is currently not forwarding any traffic.
+        - SAI\_NEXT\_HOP\_GROUP\_MEMBER\_FAILED - This next hop is primary but is currently in failed state and is not forwarding any traffic.
 
 Furthermore, the relationship between next hops and their roles within a
 protection group can be in one of two states:
 
-              Primary      Backup
-  ----------- ------------ ---------
-  PREFERRED   FORWARDING   STANDBY
-  OBSERVED    FORWARDING   STANDBY
-
-              Primary      Backup
-  ----------- ------------ ------------
-  PREFERRED   FORWARDING   STANDBY
-  OBSERVED    FAILED       FORWARDING
-
-Failure of primary
-
-Failure cleared
-
-[]{#_Toc478055079 .anchor}
-
-[]{#_Toc478055086 .anchor}
+![](figures/sai_frr_fsm.png)
 
 # Specification
 
